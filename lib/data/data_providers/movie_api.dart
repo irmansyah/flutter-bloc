@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter_bloc_movie/data/models/models.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
-import 'package:flutter_bloc_movie/data/models/movie.dart';
 
 class MovieApi {
   static const baseUrl = 'https://api.themoviedb.org/3';

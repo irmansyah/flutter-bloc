@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_movie/logic/blocs/movie_bloc.dart';
+import 'package:flutter_bloc_movie/logic/blocs/blocs.dart';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class HomePage extends StatefulWidget {
+  HomePage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _HomePageState extends State<HomePage> {
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  int _counter = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -35,37 +30,65 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
-            BlocConsumer<MovieBloc, MovieState>(
-              listener: (context, state) {
-                if (state is MovieLoaded) {
-                  print(state.movie);
-                }
-                print('bloc listener $state');
-              },
-              builder: (context, state) {
-                if (state is MovieEmpty) {
-                  return Text('No Movie');
-                }
-                if (state is MovieLoading) {
-                  return CircularProgressIndicator();
-                }
-                if (state is MovieLoaded) {
-                  return Text(state.toString());
-                }
-                if (state is MovieError) {
-                  return Text(state.message);
-                }
-                return Text('Unimplemented state');
-              },
-            ),
+            _movieBlocConsumer(),
+            _personBlocConsumer(),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {},
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
     );
   }
+
+  _movieBlocConsumer() => 
+    BlocConsumer<MovieBloc, MovieState>(
+      listener: (context, state) {
+        if (state is MovieLoaded) {
+        }
+      },
+      builder: (context, state) {
+        print(state);
+        if (state is MovieEmpty) {
+          return Text('No Movie');
+        }
+        if (state is MovieLoading) {
+          return CircularProgressIndicator();
+        }
+        if (state is MovieLoaded) {
+          return Text(state.toString());
+        }
+        if (state is MovieError) {
+          return Text(state.message);
+        }
+        return Text('Unimplemented state');
+      },
+    );
+
+  _personBlocConsumer() => Container(
+    child: BlocConsumer<PersonBloc, PersonState>(
+      listener: (context, state) {
+        if (state is PersonLoaded) {
+          print('PersonLoaded : ${state.person.message}');
+        }
+      },
+      builder: (context, state) {
+        if (state is PersonEmpty) {
+          return Text('No Person');
+        }
+        if (state is PersonLoading) {
+          return CircularProgressIndicator();
+        }
+        if (state is PersonLoaded) {
+          return Text(state.person.data.length.toString());
+        }
+        if (state is PersonError) {
+          return Text(state.message);
+        }
+        return Text('Unimplemented state');
+      },
+    ),
+  );
 }

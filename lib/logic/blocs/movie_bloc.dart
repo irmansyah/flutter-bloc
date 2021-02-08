@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc_movie/data/models/models.dart';
+import 'package:flutter_bloc_movie/data/repositories/repositories.dart';
 import 'package:meta/meta.dart';
-import 'package:flutter_bloc_movie/data/models/movie.dart';
-import 'package:flutter_bloc_movie/data/repositories/movie_repository.dart';
 
 part 'movie_event.dart';
 part 'movie_state.dart';
@@ -30,7 +30,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
       final Movie movie = await movieRepository.getMovieNowPlayingList();
       yield MovieLoaded(movie: movie);
     } catch (_) {
-      yield MovieError(message: 'Unable to fetch weather');
+      yield MovieError(message: 'Unable to fetch movie');
     }
   }
 }

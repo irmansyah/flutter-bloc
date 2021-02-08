@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_movie/data/data_providers/movie_api.dart';
+import 'package:flutter_bloc_movie/data/data_providers/data_providers.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter_bloc_movie/data/models/models.dart';
 

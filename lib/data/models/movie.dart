@@ -5,12 +5,13 @@ class Movie {
   int totalPages;
   int totalResults;
 
-  Movie(
-      {this.dates,
-        this.page,
-        this.results,
-        this.totalPages,
-        this.totalResults});
+  Movie({
+    this.dates,
+    this.page,
+    this.results,
+    this.totalPages,
+    this.totalResults
+  });
 
   Movie.fromJson(Map<String, dynamic> json) {
     dates = json['dates'] != null ? new Dates.fromJson(json['dates']) : null;
