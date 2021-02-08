@@ -1,15 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_bloc_movie/data/repositories/repositories.dart';
+import 'package:flutter_bloc_movie/data/data_providers/movie_api.dart';
+import 'package:flutter_bloc_movie/logic/blocs/movie_bloc.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'logic/blocs/bloc_delegate.dart';
+
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'package:http/http.dart' as http;
+
+import 'presentation/pages/home_page.dart';
 
 Future main() async {
   await DotEnv.load(fileName: ".env");
   Bloc.observer = SimpleBlocObserver();
-  print(env['FOO']);
-  runApp(MyApp());
+  final movieRepository = MovieRepository(
+    movieApi: MovieApi(
+      httpClient: http.Client(),
+    ),
+  );
+  runApp(
+    RepositoryProvider.value(
+      value: movieRepository,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<MovieBloc>(
+            create: (context) => MovieBloc(
+              movieRepository: movieRepository,
+            ),
+          ),
+        ],
+        child: MyApp(),
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -23,53 +48,6 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
     );
   }
 }

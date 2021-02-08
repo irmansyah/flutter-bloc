@@ -16,9 +16,6 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
   MovieBloc({@required this.movieRepository}) : super(null);
 
   @override
-  MovieState get initialState => MovieEmpty();
-
-  @override
   Stream<MovieState> mapEventToState(
     MovieEvent event,
   ) async* {
