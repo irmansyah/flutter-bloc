@@ -1,4 +1,6 @@
-class Movie {
+import 'package:equatable/equatable.dart';
+
+class Movie extends Equatable {
   Dates dates;
   int page;
   List<Results> results;
@@ -15,7 +17,8 @@ class Movie {
 
   Movie.fromJson(Map<String, dynamic> json) {
     dates = json['dates'] != null ? new Dates.fromJson(json['dates']) : null;
-    page = json['page'];
+    page = json['page'];  
+    // print('Movie.fromJson : ${page}');
     if (json['results'] != null) {
       results = new List<Results>();
       json['results'].forEach((v) {
@@ -39,6 +42,9 @@ class Movie {
     data['total_results'] = this.totalResults;
     return data;
   }
+
+  @override
+  List<Object> get props => [dates, page, results, totalPages, totalResults];
 }
 
 class Dates {

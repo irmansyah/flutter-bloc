@@ -14,33 +14,35 @@ import 'presentation/pages/home_page.dart';
 Future main() async {
   await DotEnv.load(fileName: ".env");
   Bloc.observer = SimpleBlocObserver();
-
-  final MovieRepository movieRepository = MovieRepository(
-    movieApi: MovieApi(
-      httpClient: http.Client(),
-    ),
-  );
-
-  final PersonRepository personRepository = PersonRepository(
-    personApi: PersonApi(
-      httpClient: http.Client(),
-    ),
-  );
-  
   runApp(
-    RepositoryProvider.value(
-      value: personRepository,
+    MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<SimpleRepository>(
+          create: (context) => SimpleRepository(
+            personApi: SimpleApi(
+              httpClient: http.Client(),
+            ),
+          ),
+        ),
+        RepositoryProvider<MovieRepository>(
+          create: (context) => MovieRepository(
+            movieApi: MovieApi(
+              httpClient: http.Client(),
+            ),
+          ),
+        ),
+      ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<PersonBloc>(
-            create: (context) => PersonBloc(
-              personRepository: personRepository,
+          BlocProvider<SimpleBloc>(
+            create: (context) => SimpleBloc(
+              simpleRepository: context.read<SimpleRepository>(),
             )..add(GetPersonList()),
           ),
           BlocProvider<MovieBloc>(
             create: (context) => MovieBloc(
-              movieRepository: movieRepository,
-            ),
+              movieRepository: context.read<MovieRepository>(),
+            )..add(GetMovieNowPlayingList()),
           ),
         ],
         child: MyApp(),

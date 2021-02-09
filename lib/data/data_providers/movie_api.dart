@@ -18,7 +18,6 @@ class MovieApi {
       throw Exception('Failure');
     }
     final Map<String, dynamic> movieListJson = json.decode(response.body);
-    print('Movie List Json : ${movieListJson.length}');
     return Movie.fromJson(movieListJson);
   }
 }

@@ -11,9 +11,13 @@ part 'movie_state.dart';
 
 class MovieBloc extends Bloc<MovieEvent, MovieState> {
 
-  final MovieRepository movieRepository;
+  final MovieRepository _movieRepository;
 
-  MovieBloc({@required this.movieRepository}) : super(null);
+  MovieBloc({
+    @required MovieRepository movieRepository,
+    }) : assert(movieRepository != null),
+        _movieRepository = movieRepository,
+        super(MovieLoading());
 
   @override
   Stream<MovieState> mapEventToState(
@@ -26,8 +30,10 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
 
   Stream <MovieState> _mapGetMovieNowPlayingToState(GetMovieNowPlayingList event) async* {
     yield MovieLoading();
+    print('_mapGetMovieNowPlayingToState : ');
+
     try {
-      final Movie movie = await movieRepository.getMovieNowPlayingList();
+      final Movie movie = await _movieRepository.getMovieNowPlayingList();
       yield MovieLoaded(movie: movie);
     } catch (_) {
       yield MovieError(message: 'Unable to fetch movie');
