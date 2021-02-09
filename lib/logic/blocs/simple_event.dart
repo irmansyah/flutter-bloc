@@ -19,3 +19,11 @@ class GetJobList extends SimpleEvent {
   @override
   List<Object> get props => [];
 }
+
+class GetPersonJobList extends SimpleEvent {
+
+  const GetPersonJobList();
+
+  @override
+  List<Object> get props => [];
+}

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_movie/data/entities/entities.dart';
@@ -20,9 +22,13 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: _personBlocConsumer(),
-      ),
+      // body: Column(
+      //   children: [
+      //     _personBlocConsumer(),
+      //     _jobBlocConsumer(),
+      //   ],
+      // ),
+      body: _listBlocConsumer(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.read<SimpleBloc>().add(GetJobList());
@@ -32,34 +38,10 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  _movieBlocConsumer() => BlocConsumer<MovieBloc, MovieState>(
+  
+  _listBlocConsumer() => BlocConsumer<SimpleBloc, SimpleState>(
     listener: (context, state) {
-      if (state is MovieLoaded) {
-      }
-    },
-    builder: (context, state) {
-      if (state is MovieEmpty) {
-        return Text('No Movie');
-      }
-      if (state is MovieLoading) {
-        return CircularProgressIndicator();
-      }
-      if (state is MovieLoaded) {
-        return Text(state.movie.results.length.toString());
-      }
-      if (state is MovieError) {
-        return Text(state.message);
-      }
-      return Text('Unimplemented state');
-    },
-  );
-
-  _personBlocConsumer() => BlocConsumer<SimpleBloc, SimpleState>(
-    listener: (context, state) {
-      if (state is SimpleLoaded) {
-
-      }
+      if (state is SimpleLoaded) {}
     },
     builder: (context, state) {
       if (state is SimpleEmpty) {
@@ -69,22 +51,7 @@ class _HomePageState extends State<HomePage> {
         return CircularProgressIndicator();
       }
       if (state is SimpleLoaded) {
-        return ListView.builder(
-          itemCount: state.baseEntities.length,
-          itemBuilder: (context, index) {
-            BaseEntity entity = state.baseEntities[index];
-            if (entity is PersonCarouselEntity) {
-              return Text(entity.name);
-            } else if (entity is JobListViewEntity) {
-              return Container(
-                padding: const EdgeInsets.all(8.0),
-                color: Colors.blue, 
-                child: Text(entity.name),
-              );
-            } else {
-              return Text("Unimplemented Widget");
-            }
-        });
+        return _personListView(state);
       }
       if (state is SimpleError) {
         return Text(state.message);
@@ -92,4 +59,100 @@ class _HomePageState extends State<HomePage> {
       return Text('Unimplemented state');
     },
   );
+
+  _personBlocConsumer() => BlocConsumer<SimpleBloc, SimpleState>(
+    listener: (context, state) {
+      if (state is SimpleLoaded) {}
+    },
+    builder: (context, state) {
+      if (state is SimpleEmpty) {
+        return Text('No Person');
+      }
+      if (state is SimpleLoading) {
+        return CircularProgressIndicator();
+      }
+      if (state is SimpleLoaded) {
+        return _personListView(state);
+      }
+      if (state is SimpleError) {
+        return Text(state.message);
+      }
+      return Text('Unimplemented state');
+    },
+  );
+
+  _jobBlocConsumer() => BlocConsumer<SimpleBloc, SimpleState>(
+    listener: (context, state) {
+      if (state is SimpleLoaded) {}
+    },
+    builder: (context, state) {
+      if (state is SimpleEmpty) {
+        return Text('No Person');
+      }
+      if (state is SimpleLoading) {
+        return CircularProgressIndicator();
+      }
+      if (state is SimpleLoaded) {
+        return _jobListView(state);
+      }
+      if (state is SimpleError) {
+        return Text(state.message);
+      }
+      return Text('Unimplemented state');
+    },
+  );
+
+  _personListView(state) => Container(  
+    child: ListView.builder(
+      itemCount: state.baseEntities.length,
+      itemBuilder: (context, index) {
+        BaseEntity entity = state.baseEntities[index];
+        if (entity is PersonCarouselEntity) {
+          return Text(entity.name);
+        } else if (entity is JobListViewEntity) {
+          return buildPersonItem(entity.name);
+        } else {
+          return Text("Unimplemented Widget");
+        }
+    }),
+  );
+
+  _jobListView(state) => Container(
+    color: Colors.amber,
+    child: ListView.builder(
+      shrinkWrap: true,
+      scrollDirection: Axis.horizontal,
+      itemCount: state.baseEntities.length,
+      itemBuilder: (context, index) {
+        BaseEntity entity = state.baseEntities[index];
+        if (entity is PersonCarouselEntity) {
+          return Text(entity.name);
+        } else if (entity is JobListViewEntity) {
+          return buildJobItem(entity.name);
+        } else {
+          return Text("Unimplemented Widget");
+        }
+    }),
+  );
+
+  Widget buildPersonItem(String name) {
+    return Container(
+      padding: EdgeInsets.all(16),
+      color: randomColor,
+      child: Text("List $name"),
+    );
+  }
+
+  Widget buildJobItem(String name) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      color: Colors.blue, 
+      child: Text(name),
+    );
+  }
+
+  Color get randomColor {
+    List<Color> colors = [Colors.lime, Colors.redAccent, Colors.lightBlue, Colors.greenAccent, Colors.pink, Colors.green, Colors.lime, Colors.purple, Colors.yellow];
+    return colors[Random().nextInt(colors.length)];
+  }
 }

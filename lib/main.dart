@@ -37,7 +37,7 @@ Future main() async {
           BlocProvider<SimpleBloc>(
             create: (context) => SimpleBloc(
               simpleRepository: context.read<SimpleRepository>(),
-            )..add(GetPersonList()),
+            )..add(GetPersonJobList()),
           ),
           BlocProvider<MovieBloc>(
             create: (context) => MovieBloc(

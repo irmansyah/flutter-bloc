@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_movie/data/data_providers/data_providers.dart';
+import 'package:flutter_bloc_movie/data/data_providers/dummy_data.dart';
 import 'package:flutter_bloc_movie/data/entities/entities.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter_bloc_movie/data/models/models.dart';
@@ -16,6 +17,23 @@ class SimpleRepository {
   Future<List<JobListViewEntity>> getJobList() async {
     Job job = await personApi.getJobList();
     return Mapper.jobListMapper(job);
+  }
+
+  Future<List<BaseEntity>> getList() async {
+    // Person person = await personApi.getPersonList();
+    // Job job = await personApi.getJobList();
+    // List<BaseEntity> personEntities = Mapper.personCarouselMapper(person);
+    // List<BaseEntity> jobEntities = Mapper.jobListMapper(job);
+
+    List<BaseEntity> personEntities = DummyData.getPersonList();
+    List<BaseEntity> jobEntities = DummyData.getJobList();
+  
+
+    List<BaseEntity> entities = [...personEntities, ...jobEntities];
+    entities.map((element) {
+      print(element);
+    }); 
+    return entities;
   }
 }
 

@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc_movie/data/entities/entities.dart';
 import 'package:flutter_bloc_movie/data/repositories/repositories.dart';
+import 'package:flutter_bloc_movie/logic/blocs/blocs.dart';
 import 'package:meta/meta.dart';
 
 part 'simple_event.dart';
@@ -29,6 +30,9 @@ class SimpleBloc extends Bloc<SimpleEvent, SimpleState> {
     if (event is GetJobList) {
       yield* _mapGetJobListToState(event);
     }
+    if (event is GetPersonJobList) {
+      yield* _mapGetPersonJobListToState(event);
+    }
   }
 
   Stream<SimpleState> _mapGetPersonListToState(GetPersonList event) async* {
@@ -44,10 +48,20 @@ class SimpleBloc extends Bloc<SimpleEvent, SimpleState> {
   Stream<SimpleState> _mapGetJobListToState(GetJobList event) async* {
     yield SimpleLoading();
     try {
-      List<JobListViewEntity> entity = await _simpleRepository.getJobList();
-      yield SimpleLoaded(baseEntities: entity);
+      List<JobListViewEntity> entities = await _simpleRepository.getJobList();
+      yield SimpleLoaded(baseEntities: entities);
     } catch (_) {
-      yield SimpleError(message: 'Unable to find job');
+      yield SimpleError(message: 'Unable to fetch job');
+    }
+  }
+
+  Stream<SimpleState> _mapGetPersonJobListToState(SimpleEvent event) async* {
+    yield SimpleLoading();
+    try {
+      List<BaseEntity> entity = await _simpleRepository.getList();
+      yield SimpleLoaded(baseEntities: entity);
+    } catch (e) {
+      yield SimpleError(message: 'Unable to find job : ${e}');
     }
   }
 }
