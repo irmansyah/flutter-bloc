@@ -1,28 +1,27 @@
 import 'package:equatable/equatable.dart';
 
 class Movie extends Equatable {
-  Dates dates;
-  int page;
-  List<Results> results;
-  int totalPages;
-  int totalResults;
+  Dates? dates;
+  int? page;
+  List<Results>? results;
+  int? totalPages;
+  int? totalResults;
 
-  Movie({
-    this.dates,
-    this.page,
-    this.results,
-    this.totalPages,
-    this.totalResults
-  });
+  Movie(
+      {this.dates,
+      this.page,
+      this.results,
+      this.totalPages,
+      this.totalResults});
 
   Movie.fromJson(Map<String, dynamic> json) {
     dates = json['dates'] != null ? new Dates.fromJson(json['dates']) : null;
-    page = json['page'];  
+    page = json['page'];
     // print('Movie.fromJson : ${page}');
     if (json['results'] != null) {
-      results = new List<Results>();
+      results = new List<Results>.empty(growable: true);
       json['results'].forEach((v) {
-        results.add(new Results.fromJson(v));
+        results!.add(new Results.fromJson(v));
       });
     }
     totalPages = json['total_pages'];
@@ -32,11 +31,11 @@ class Movie extends Equatable {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.dates != null) {
-      data['dates'] = this.dates.toJson();
+      data['dates'] = this.dates!.toJson();
     }
     data['page'] = this.page;
     if (this.results != null) {
-      data['results'] = this.results.map((v) => v.toJson()).toList();
+      data['results'] = this.results!.map((v) => v.toJson()).toList();
     }
     data['total_pages'] = this.totalPages;
     data['total_results'] = this.totalResults;
@@ -44,12 +43,13 @@ class Movie extends Equatable {
   }
 
   @override
-  List<Object> get props => [dates, page, results, totalPages, totalResults];
+  List<Object> get props =>
+      [dates!, page!, results!, totalPages!, totalResults!];
 }
 
 class Dates {
-  String maximum;
-  String minimum;
+  String? maximum;
+  String? minimum;
 
   Dates({this.maximum, this.minimum});
 
@@ -67,36 +67,36 @@ class Dates {
 }
 
 class Results {
-  bool adult;
-  String backdropPath;
-  List<int> genreIds;
-  int id;
-  String originalLanguage;
-  String originalTitle;
-  String overview;
-  double popularity;
-  String posterPath;
-  String releaseDate;
-  String title;
-  bool video;
-  double voteAverage;
-  int voteCount;
+  bool? adult;
+  String? backdropPath;
+  List<int>? genreIds;
+  int? id;
+  String? originalLanguage;
+  String? originalTitle;
+  String? overview;
+  double? popularity;
+  String? posterPath;
+  String? releaseDate;
+  String? title;
+  bool? video;
+  double? voteAverage;
+  int? voteCount;
 
   Results(
       {this.adult,
-        this.backdropPath,
-        this.genreIds,
-        this.id,
-        this.originalLanguage,
-        this.originalTitle,
-        this.overview,
-        this.popularity,
-        this.posterPath,
-        this.releaseDate,
-        this.title,
-        this.video,
-        this.voteAverage,
-        this.voteCount});
+      this.backdropPath,
+      this.genreIds,
+      this.id,
+      this.originalLanguage,
+      this.originalTitle,
+      this.overview,
+      this.popularity,
+      this.posterPath,
+      this.releaseDate,
+      this.title,
+      this.video,
+      this.voteAverage,
+      this.voteCount});
 
   Results.fromJson(Map<String, dynamic> json) {
     adult = json['adult'];
