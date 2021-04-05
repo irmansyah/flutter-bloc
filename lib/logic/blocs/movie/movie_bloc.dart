@@ -14,7 +14,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
   final MovieRepository _movieRepository;
 
   MovieBloc({
-    @required MovieRepository movieRepository,
+    required MovieRepository movieRepository,
     }) : assert(movieRepository != null),
         _movieRepository = movieRepository,
         super(MovieLoading());

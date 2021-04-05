@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
 class Person extends Equatable {
-  bool status;
-  String message;
-  List<PersonData> data;
+  bool? status;
+  String? message;
+  List<PersonData>? data;
 
   Person({this.status, this.message, this.data});
 
@@ -11,9 +11,9 @@ class Person extends Equatable {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = new List<PersonData>();
+      data = new List<PersonData>.empty(growable: true);
       json['data'].forEach((v) {
-        data.add(new PersonData.fromJson(v));
+        data!.add(new PersonData.fromJson(v));
       });
     }
   }
@@ -23,19 +23,19 @@ class Person extends Equatable {
     data['status'] = this.status;
     data['message'] = this.message;
     if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 
   @override
-  List<Object> get props => [status, message, data];
+  List<Object> get props => [status!, message!, data!];
 }
 
 class PersonData extends Equatable {
-  String id;
-  String name;
-  String gender;
+  String? id;
+  String? name;
+  String? gender;
 
   PersonData({this.id, this.name, this.gender});
 
@@ -54,5 +54,5 @@ class PersonData extends Equatable {
   }
 
   @override
-  List<Object> get props => [id, name, gender];
+  List<Object> get props => [id!, name!, gender!];
 }

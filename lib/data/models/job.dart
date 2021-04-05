@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
 class Job extends Equatable {
-  bool status;
-  String message;
-  List<JobData> data;
+  bool? status;
+  String? message;
+  List<JobData>? data;
 
   Job({this.status, this.message, this.data});
 
@@ -11,9 +11,9 @@ class Job extends Equatable {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = new List<JobData>();
+      data = new List<JobData>.empty(growable: true);
       json['data'].forEach((v) {
-        data.add(new JobData.fromJson(v));
+        data!.add(new JobData.fromJson(v));
       });
     }
   }
@@ -23,18 +23,18 @@ class Job extends Equatable {
     data['status'] = this.status;
     data['message'] = this.message;
     if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 
   @override
-  List<Object> get props => [status, message, data];
+  List<Object> get props => [status!, message!, data!];
 }
 
 class JobData extends Equatable {
-  String id;
-  String name;
+  String? id;
+  String? name;
 
   JobData({this.id, this.name});
 
@@ -51,5 +51,5 @@ class JobData extends Equatable {
   }
 
   @override
-  List<Object> get props => [id, name];
+  List<Object> get props => [id!, name!];
 }

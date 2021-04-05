@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_movie/data/data_providers/data_providers.dart';
 import 'package:flutter_bloc_movie/data/repositories/repositories.dart';
-
-import 'logic/blocs/bloc_delegate.dart';
-
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'package:http/http.dart' as http;
 
+import 'logic/blocs/bloc_delegate.dart';
 import 'logic/blocs/blocs.dart';
-import 'presentation/pages/home_page.dart';
+import 'presentation/pages/pages.dart';
 
 Future main() async {
   await DotEnv.load(fileName: ".env");
@@ -31,6 +29,13 @@ Future main() async {
             ),
           ),
         ),
+        RepositoryProvider<NameRepository>(
+          create: (context) => NameRepository(
+            nameApi: NameApi(
+              httpClient: http.Client(),
+            ),
+          ),
+        )
       ],
       child: MultiBlocProvider(
         providers: [
@@ -44,6 +49,11 @@ Future main() async {
               movieRepository: context.read<MovieRepository>(),
             )..add(GetMovieNowPlayingList()),
           ),
+          BlocProvider<NameBloc>(
+            create: (context) => NameBloc(
+              nameRepository: context.read<NameRepository>(),
+            )..add(NameFetched()),
+          )
         ],
         child: MyApp(),
       ),
@@ -52,7 +62,6 @@ Future main() async {
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -61,7 +70,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomePage(title: 'Flutter Demo Home Page'),
+      home: BasePage(),
     );
   }
 }
